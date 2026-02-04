@@ -3,7 +3,7 @@ import { useSceneStore } from '../../store/sceneStore';
 import SearchBar from './SearchBar';
 
 const CharactersSection = ({ onUpdate }) => {
-  const { assets, characters, toggleCharacter, updateCharacterScale } = useSceneStore();
+  const { assets, characters, toggleCharacter, clearAllCharacters } = useSceneStore();
   const [search, setSearch] = useState('');
 
   const handleToggle = (character) => {
@@ -11,27 +11,40 @@ const CharactersSection = ({ onUpdate }) => {
     const exists = characters.find(c => c.path === character.path);
     const newCharacters = exists
       ? characters.filter(c => c.path !== character.path)
-      : [...characters, { ...character, x: 50, y: 50, scale: 1 }];
+      : [...characters, { ...character, scale: 0.7 }];
     onUpdate({ characters: newCharacters });
   };
 
-  const handleScaleChange = (character, scale) => {
-    updateCharacterScale(character.path, scale);
-    const newCharacters = characters.map(c =>
-      c.path === character.path ? { ...c, scale } : c
-    );
-    onUpdate({ characters: newCharacters });
+  const handleClearAll = () => {
+    clearAllCharacters();
+    onUpdate({ characters: [] });
   };
 
   const isActive = (path) => characters.some(c => c.path === path);
 
-  const filteredCharacters = assets.characters.filter(char =>
-    char.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredCharacters = assets.characters
+    .filter(char => char.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const aActive = isActive(a.path);
+      const bActive = isActive(b.path);
+      if (aActive && !bActive) return -1;
+      if (!aActive && bActive) return 1;
+      return 0;
+    });
 
   return (
     <section className="bg-gray-800 rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-3 text-gray-100">Characters</h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-lg font-semibold text-gray-100">Characters</h2>
+        {characters.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            className="px-3 py-1 rounded text-sm font-medium bg-red-600 hover:bg-red-700 text-white"
+          >
+            Hide All
+          </button>
+        )}
+      </div>
       <SearchBar value={search} onChange={setSearch} placeholder="Search characters..." />
       <div className="space-y-2 max-h-64 overflow-y-auto">
         {filteredCharacters.map((char) => (
@@ -45,17 +58,6 @@ const CharactersSection = ({ onUpdate }) => {
               className="w-12 h-12 object-contain rounded"
             />
             <span className="flex-1 text-sm text-gray-200 truncate">{char.name}</span>
-            {isActive(char.path) && (
-              <input
-                type="range"
-                min="0.5"
-                max="2"
-                step="0.1"
-                value={characters.find(c => c.path === char.path)?.scale || 1}
-                onChange={(e) => handleScaleChange(char, parseFloat(e.target.value))}
-                className="w-16"
-              />
-            )}
             <button
               onClick={() => handleToggle(char)}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${

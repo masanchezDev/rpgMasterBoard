@@ -26,8 +26,10 @@ export const useSceneStore = create((set, get) => ({
     if (exists) {
       return { characters: state.characters.filter(c => c.path !== character.path) };
     }
-    return { characters: [...state.characters, { ...character, x: 50, y: 50, scale: 1 }] };
+    return { characters: [...state.characters, { ...character, scale: 0.7 }] };
   }),
+
+  clearAllCharacters: () => set({ characters: [] }),
 
   updateCharacterPosition: (path, x, y) => set((state) => ({
     characters: state.characters.map(c => 
