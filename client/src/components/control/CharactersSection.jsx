@@ -3,7 +3,7 @@ import { useSceneStore } from '../../store/sceneStore';
 import SearchBar from './SearchBar';
 
 const CharactersSection = ({ onUpdate }) => {
-  const { assets, characters, toggleCharacter, clearAllCharacters } = useSceneStore();
+  const { assets, characters, toggleCharacter, clearAllCharacters, combat, addToCombat } = useSceneStore();
   const [search, setSearch] = useState('');
 
   const handleToggle = (character) => {
@@ -20,7 +20,12 @@ const CharactersSection = ({ onUpdate }) => {
     onUpdate({ characters: [] });
   };
 
+  const handleAddToCombat = (character) => {
+    addToCombat(character);
+  };
+
   const isActive = (path) => characters.some(c => c.path === path);
+  const isInCombat = (path) => combat.combatants.some(c => c.path === path);
 
   const filteredCharacters = assets.characters
     .filter(char => char.name.toLowerCase().includes(search.toLowerCase()))
@@ -58,6 +63,18 @@ const CharactersSection = ({ onUpdate }) => {
               className="w-12 h-12 object-contain rounded"
             />
             <span className="flex-1 text-sm text-gray-200 truncate">{char.name}</span>
+            <button
+              onClick={() => handleAddToCombat(char)}
+              disabled={isInCombat(char.path)}
+              className={`px-2 py-1 rounded text-sm transition-colors ${
+                isInCombat(char.path)
+                  ? 'bg-amber-800 text-amber-300 cursor-default'
+                  : 'bg-amber-600 hover:bg-amber-700 text-white'
+              }`}
+              title="Add to combat"
+            >
+              ⚔️
+            </button>
             <button
               onClick={() => handleToggle(char)}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${

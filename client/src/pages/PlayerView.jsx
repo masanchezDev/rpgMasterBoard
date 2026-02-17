@@ -5,6 +5,7 @@ import ObjectsLayer from '../components/player/ObjectsLayer';
 import EventLayer from '../components/player/EventLayer';
 import BlackoutLayer from '../components/player/BlackoutLayer';
 import AudioPlayer from '../components/player/AudioPlayer';
+import CombatTracker from '../components/player/CombatTracker';
 
 const PlayerView = () => {
   useSocket(false);
@@ -14,6 +15,7 @@ const PlayerView = () => {
       <BackgroundLayer />
       <CharactersLayer />
       <ObjectsLayer />
+      <CombatTracker />
       <EventLayer />
       <BlackoutLayer />
       <AudioPlayer />

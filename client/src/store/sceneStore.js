@@ -8,6 +8,7 @@ export const useSceneStore = create((set, get) => ({
   blackout: false,
   music: { src: null, volume: 0.5, playing: false },
   sound: null,
+  combat: { active: false, combatants: [], turn: 0 },
   assets: {
     backgrounds: [],
     characters: [],
@@ -42,6 +43,43 @@ export const useSceneStore = create((set, get) => ({
       c.path === path ? { ...c, scale } : c
     )
   })),
+
+  addToCombat: (character) => set((state) => {
+    const exists = state.combat.combatants.find(c => c.path === character.path);
+    if (exists) return state;
+    return { combat: { ...state.combat, combatants: [...state.combat.combatants, character] } };
+  }),
+
+  removeFromCombat: (path) => set((state) => ({
+    combat: {
+      ...state.combat,
+      combatants: state.combat.combatants.filter(c => c.path !== path)
+    }
+  })),
+
+  reorderCombatants: (combatants) => set((state) => ({
+    combat: { ...state.combat, combatants }
+  })),
+
+  startCombat: () => set((state) => ({
+    combat: { ...state.combat, active: true, turn: 0 }
+  })),
+
+  endCombat: () => set({ combat: { active: false, combatants: [], turn: 0 } }),
+
+  nextTurn: () => set((state) => {
+    const { combatants } = state.combat;
+    if (combatants.length === 0) return state;
+    const rotated = [...combatants.slice(1), combatants[0]];
+    return { combat: { ...state.combat, combatants: rotated, turn: state.combat.turn + 1 } };
+  }),
+
+  previousTurn: () => set((state) => {
+    const { combatants } = state.combat;
+    if (combatants.length === 0) return state;
+    const rotated = [combatants[combatants.length - 1], ...combatants.slice(0, -1)];
+    return { combat: { ...state.combat, combatants: rotated, turn: Math.max(0, state.combat.turn - 1) } };
+  }),
 
   toggleObject: (object) => set((state) => {
     const exists = state.objects.find(o => o.path === object.path);
@@ -81,7 +119,8 @@ export const useSceneStore = create((set, get) => ({
     event: scene.event,
     blackout: scene.blackout,
     music: scene.music,
-    sound: scene.sound
+    sound: scene.sound,
+    combat: scene.combat || { active: false, combatants: [], turn: 0 }
   }),
 
   getSceneState: () => {
@@ -92,7 +131,8 @@ export const useSceneStore = create((set, get) => ({
       objects: state.objects,
       event: state.event,
       blackout: state.blackout,
-      music: state.music
+      music: state.music,
+      combat: state.combat
     };
   }
 }));

@@ -6,6 +6,7 @@ import MusicSection from '../components/control/MusicSection';
 import SoundsSection from '../components/control/SoundsSection';
 import EventsSection from '../components/control/EventsSection';
 import MasterControls from '../components/control/MasterControls';
+import CombatSection from '../components/control/CombatSection';
 
 const ControlPanel = () => {
   const { emitSceneUpdate, emitSound } = useSocket(true);
@@ -21,11 +22,12 @@ const ControlPanel = () => {
         <div className="space-y-6">
           <MasterControls onUpdate={emitSceneUpdate} />
           <BackgroundSection onUpdate={emitSceneUpdate} />
+          <ObjectsSection onUpdate={emitSceneUpdate} />
         </div>
 
         <div className="space-y-6">
           <CharactersSection onUpdate={emitSceneUpdate} />
-          <ObjectsSection onUpdate={emitSceneUpdate} />
+          <CombatSection onUpdate={emitSceneUpdate} />
         </div>
 
         <div className="space-y-6">

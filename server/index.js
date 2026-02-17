@@ -78,7 +78,8 @@ let currentScene = {
   event: null,
   blackout: false,
   music: { src: null, volume: 0.5, playing: false },
-  sound: null
+  sound: null,
+  combat: { active: false, combatants: [], turn: 0 }
 };
 
 io.on('connection', (socket) => {
