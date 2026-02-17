@@ -50,7 +50,7 @@ const ObjectsLayer = () => {
           <img
             src={object.path}
             alt={object.name}
-            className="relative max-w-[50vw] max-h-[50vh] object-contain"
+            className="relative h-dvh object-contain"
           />
         </div>
       ))}

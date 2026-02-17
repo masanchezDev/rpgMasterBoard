@@ -43,13 +43,18 @@ const scanAssets = () => {
   const assets = {};
   const assetsPath = join(ROOT_DIR, 'assets');
 
+  const encodeAssetFileName = (fileName) =>
+    encodeURIComponent(fileName)
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29');
+
   ASSET_FOLDERS.forEach(folder => {
     const folderPath = join(assetsPath, folder);
     try {
       const files = readdirSync(folderPath).filter(file => !file.startsWith('.'));
       assets[folder] = files.map(file => ({
         name: file,
-        path: `/assets/${folder}/${file}`
+        path: `/assets/${folder}/${encodeAssetFileName(file)}`
       }));
     } catch (error) {
       assets[folder] = [];

@@ -25,8 +25,7 @@ const BackgroundLayer = () => {
         isTransitioning ? 'opacity-0' : 'opacity-100'
       }`}
       style={{ 
-        backgroundImage: `url(${currentBg})`,
-        filter: 'blur(2px)'
+        backgroundImage: `url("${currentBg}")`
       }}
     />
   );

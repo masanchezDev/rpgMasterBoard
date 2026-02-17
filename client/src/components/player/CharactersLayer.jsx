@@ -34,14 +34,14 @@ const CharactersLayer = () => {
           key={character.path}
           src={character.path}
           alt={character.name}
-          className={`max-h-[80vh] object-contain ${
+          className={`h-dvh object-contain ${
             exitingCharacters.includes(character.path)
               ? 'animate-fadeOutDown'
               : 'animate-fadeInUp'
           }`}
           style={{
             transformOrigin: 'bottom center',
-            marginLeft: index > 0 ? '-10%' : '0',
+            marginLeft: index > 0 ? '-18%' : '0',
             zIndex: index,
             transition: 'margin-left 0.3s ease-out'
           }}
